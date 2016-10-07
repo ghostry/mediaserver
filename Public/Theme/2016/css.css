@@ -1,0 +1,14 @@
+html,body,.main{width:100%}
+html,body{margin:0;padding:0;}
+.main{max-width:640px;margin:0 auto;}
+.center{text-align:center;}
+.musicbox{padding:3%;}
+.button{overflow:hidden;}
+.btn{padding:5px;background:#eee;}
+#dir,.filelist,.button{padding:10px;}
+.filelist div{display:block;width:100%;border-bottom:1px #ccc solid;padding:5px;overflow:hidden;}
+.filelist>div>span,.filelist>div>input{display:block;float:left;}
+.filelist>div>input{width:5%;}
+.filelist>div>span{width:70%;}
+.playing{color:#217be6;}
+a.file{color:#217be6;display:block;float:right;width:20%;text-align:center;}

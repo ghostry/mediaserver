@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>家用服务器</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="Public/Theme/2016/css.css" rel="stylesheet" />
+        <script src="Public/Lib/Zepto/zepto.min.js"></script>
+    </head>
+    <body>
+        <div class="main">
+            <div class="center">当前服务器状态</div>
+            <div class="center">CPU温度：<span id="cputemp"></span>度&nbsp;硬盘温度<span id="hddtemp"></span>度</div>
+            <div class="musicbox">
+                <div class="button">
+                    <a id="playsel" class="btn center">播放选中</a>
+                    <a id="playall" class="btn center">播放目录</a>
+                    <a id="playalls" class="btn center">随机播放</a>
+                    <a id="stop" class="btn center">停止</a>
+                </div>
+                <div id="dir">/</div>
+                <div class="filelist">
+
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function listfile(data) {
+                for (var a in data) {
+                    $('.filelist').append("<div><input type='checkbox' /><span>" + data[a] + "</span><a class='file'>播放</a></div>");
+                }
+                $('.filelist a.file').click(function () {
+                    var mp3 = $(this).parent().children('span').text();
+                    $('.filelist a.file').removeClass('playing');
+                    $(this).addClass('playing');
+                    var dir = $('#dir').text();
+                    $.getJSON('music.php', {act: 'play', mp3: mp3, dir: dir}, function (data) {
+
+                    });
+                });
+            }
+            (function () {
+                $.get('temp.php', function (data) {
+                    $('#cputemp').html(data.cputemp);
+                    $('#hddtemp').html(data.hddtemp);
+                }, 'json');
+                $.getJSON('music.php', function (data) {
+                    for (var a in data.dir) {
+                        $('.filelist').append("<div><a class='dir'>" + data['dir'][a] + "/</a></div>");
+                    }
+                    listfile(data.file);
+                    $('.filelist a.dir').click(function () {
+                        var dir = $(this).text();
+                        $('#dir').text(dir);
+                        $('.filelist').html('');
+                        $.getJSON('music.php', {dir: dir}, function (data) {
+                            listfile(data.file);
+                        });
+                    });
+                });
+                $('#stop').click(function () {
+                    $.getJSON('music.php', {act: 'stop'}, function (data) {
+
+                    });
+                });
+                $('#playall').click(function () {
+                    var dir = $('#dir').text();
+                    $.getJSON('music.php', {act: 'palyall', dir: dir}, function (data) {
+
+                    });
+                });
+                $('#playalls').click(function () {
+                    var dir = $('#dir').text();
+                    $.getJSON('music.php', {act: 'palyalls', dir: dir}, function (data) {
+
+                    });
+                });
+                $('#playsel').click(function () {
+                    var dir = $('#dir').text();
+                    var mp3 = [];
+                    $('.filelist div input').each(function (index) {
+                        if ($(this).is(":checked")) {
+                            mp3.splice(1, 0, $(this).parent().children('span').text());
+                        }
+                    });
+                    var strmp3 = JSON.stringify(mp3);
+                    $.post('music.php', {act: 'palysel', dir: dir, mp3: strmp3}, function (data) {
+                        if (data.status == 0) {
+                            alert(data.info);
+                        }
+                    },'json');
+                });
+                $('#dir').click(function () {
+                    window.location.reload();
+                });
+            })();
+        </script>
+        <script src="Public/Theme/2016/js.js"></script>
+    </body>
+</html>
