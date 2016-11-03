@@ -10,6 +10,7 @@
     <body>
         <div class="main">
             <div class="cd hidden"></div>
+            <div class="range"><i class="icon"></i><input id="yl" type="range" max="100" min="0" value="0" step="1"></div>
             <div class="center">当前服务器状态</div>
             <div class="center">CPU温度：<span id="cputemp"></span>度&nbsp;硬盘温度<span id="hddtemp"></span>度</div>
             <div class="musicbox">
@@ -48,10 +49,13 @@
                 $('.cd').addClass('hidden');
             }
             (function () {
-                $.get('temp.php', function (data) {
+                $.getJSON('temp.php', function (data) {
                     $('#cputemp').html(data.cputemp);
                     $('#hddtemp').html(data.hddtemp);
-                }, 'json');
+                });
+                $.getJSON('music.php', {act: 'amixer'}, function (data) {
+                    $('#yl').val(data.yl);
+                });
                 $.getJSON('music.php', function (data) {
                     for (var a in data.dir) {
                         $('.filelist').append("<div><a class='dir'>" + data['dir'][a] + "/</a></div>");
@@ -64,6 +68,14 @@
                         $.getJSON('music.php', {dir: dir}, function (data) {
                             listfile(data.file);
                         });
+                    });
+                });
+                $('#yl').change(function () {
+                    var yl = $('#yl').val();
+                    $.getJSON('music.php', {act: 'amixer', yl: yl}, function (data) {
+                        if (data.status == 0) {
+                            alert(data.info);
+                        }
                     });
                 });
                 $('#stop').click(function () {

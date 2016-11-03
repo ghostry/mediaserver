@@ -2,6 +2,7 @@
 
 $dir = '/mnt/data/down/mp3/';
 switch ($_REQUEST['act']) {
+    //播放选择
     case 'palysel':
         stop();
         if ($_POST['dir'] != '/') {
@@ -21,6 +22,7 @@ switch ($_REQUEST['act']) {
         exec($sh);
         echo json_encode(array('status' => 1));
         break;
+    //播放目录
     case 'palyall':
         stop();
         if ($_GET['dir'] != '/') {
@@ -32,6 +34,7 @@ switch ($_REQUEST['act']) {
 //        var_export($ok);
         echo json_encode(array('status' => 1));
         break;
+    //随机播放目录
     case 'palyalls':
         stop();
         if ($_GET['dir'] != '/') {
@@ -42,10 +45,12 @@ switch ($_REQUEST['act']) {
         exec($sh);
         echo json_encode(array('status' => 1));
         break;
+    //停止
     case 'stop':
         stop();
         echo json_encode(array('status' => 1));
         break;
+    //播放单曲
     case 'play':
         stop();
         $mp3 = $_GET['mp3'];
@@ -57,7 +62,32 @@ switch ($_REQUEST['act']) {
         exec($sh);
         echo json_encode(array('status' => 1));
         break;
-
+    //设置,读取音量
+    case 'amixer':
+        if (isset($_GET['yl'])) {
+            $yl = (int) $_GET['yl'];
+            if ($yl > 0 && $yl <= 100) {
+                $sh = "amixer set Master $yl% on 2>/dev/null";
+//            echo $sh;
+                $ok = exec($sh);
+            } else {
+                $sh = "amixer set Master 0% off 2>/dev/null";
+//            echo $sh;
+                $ok = exec($sh);
+            }
+            if ($ok) {
+                echo json_encode(array('status' => 1));
+            } else {
+                echo json_encode(array('status' => 0, 'info' => '设置失败，请重试'));
+            }
+        } else {
+            $sh = "amixer get Master |grep '%'|awk 'BEGIN{FS=\"[\\[\\%]\"}{print $2}' 2>/dev/null";
+//            echo $sh;
+            $ok = exec($sh);
+            echo json_encode(array('status' => 1, 'yl' => $ok));
+        }
+        break;
+    //取目录
     default:
         if ($_GET['dir']) {
             $dir .= $_GET['dir'] . '/';
