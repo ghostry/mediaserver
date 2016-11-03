@@ -5,7 +5,7 @@ switch ($_REQUEST['act']) {
     case 'palysel':
         stop();
         if ($_POST['dir'] != '/') {
-            $dir.=$_POST['dir'];
+            $dir .= $_POST['dir'];
         }
 //        var_export($_POST);        exit;
         $mp3 = (array) json_decode($_POST['mp3'], 1);
@@ -14,9 +14,9 @@ switch ($_REQUEST['act']) {
         }
         $sh = "nohup sudo mplayer ";
         foreach ($mp3 as $key => $value) {
-            $sh.="'" . $dir . $value . "' ";
+            $sh .= "'" . $dir . $value . "' ";
         }
-        $sh .= " >/dev/null &";
+        $sh .= " 2>/dev/null &";
 //        echo $sh;
         exec($sh);
         echo json_encode(array('status' => 1));
@@ -24,19 +24,20 @@ switch ($_REQUEST['act']) {
     case 'palyall':
         stop();
         if ($_GET['dir'] != '/') {
-            $dir.=$_GET['dir'];
+            $dir .= $_GET['dir'];
         }
-        $sh = "nohup sudo mplayer $dir* >/dev/null &";
+        $sh = "nohup sudo mplayer $dir* 2>/dev/null &";
 //        echo $sh;
-        exec($sh);
+        $ok = exec($sh);
+//        var_export($ok);
         echo json_encode(array('status' => 1));
         break;
     case 'palyalls':
         stop();
         if ($_GET['dir'] != '/') {
-            $dir.=$_GET['dir'];
+            $dir .= $_GET['dir'];
         }
-        $sh = "nohup sudo mplayer -shuffle $dir* >/dev/null &";
+        $sh = "nohup sudo mplayer -shuffle $dir* 2>/dev/null &";
 //        echo $sh;
         exec($sh);
         echo json_encode(array('status' => 1));
@@ -49,9 +50,9 @@ switch ($_REQUEST['act']) {
         stop();
         $mp3 = $_GET['mp3'];
         if ($_GET['dir'] != '/') {
-            $dir.=$_GET['dir'];
+            $dir .= $_GET['dir'];
         }
-        $sh = "nohup sudo mplayer '$dir$mp3' >/dev/null &";
+        $sh = "nohup sudo mplayer '$dir$mp3' 2>/dev/null &";
 //        echo $sh;
         exec($sh);
         echo json_encode(array('status' => 1));
@@ -59,7 +60,7 @@ switch ($_REQUEST['act']) {
 
     default:
         if ($_GET['dir']) {
-            $dir.=$_GET['dir'] . '/';
+            $dir .= $_GET['dir'] . '/';
         }
         $folder = opendir($dir);
         $i = 0;

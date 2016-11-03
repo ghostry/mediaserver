@@ -4,7 +4,8 @@ html,body{margin:0;padding:0;}
 .center{text-align:center;}
 .musicbox{padding:3%;}
 .button{overflow:hidden;}
-.btn{padding:5px;background:#eee;}
+.btn{padding:5px;background:#eee;text-align:center;border-radius:5px;}
+.btn:hover{background:#bbb;}
 #dir,.filelist,.button{padding:10px;}
 .filelist div{display:block;width:100%;border-bottom:1px #ccc solid;padding:5px;overflow:hidden;}
 .filelist>div>span,.filelist>div>input{display:block;float:left;}
@@ -12,3 +13,55 @@ html,body{margin:0;padding:0;}
 .filelist>div>span{width:70%;}
 .playing{color:#217be6;}
 a.file{color:#217be6;display:block;float:right;width:20%;text-align:center;}
+.hidden{display:none !important;}
+@-webkit-keyframes rotate {
+    0%,
+    100% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+@-moz-keyframes rotate {
+    0%,
+    100% {
+        -moz-transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(360deg);
+    }
+}
+@-o-keyframes rotate {
+    0%,
+    100% {
+        -o-transform: rotate(0deg);
+    }
+    100% {
+        -o-transform: rotate(360deg);
+    }
+}
+@-ms-keyframes rotate {
+    0%,
+    100% {
+        -ms-transform: rotate(0deg);
+    }
+    100% {
+        -ms-transform: rotate(360deg);
+    }
+}
+@keyframes rotate {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.cd{background:url('cd.png') no-repeat left top;background-size:100% auto;width:40px;height:40px;
+         animation:rotate 4s linear infinite;
+         -moz-animation: rotate 4s linear infinite;
+         -webkit-animation: rotate 4s linear infinite;
+         -o-animation: rotate 4s linear infinite;
+         -ms-animation: rotate 4s linear infinite;position:fixed;right:10px;top:10px;}

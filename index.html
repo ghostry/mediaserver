@@ -9,14 +9,15 @@
     </head>
     <body>
         <div class="main">
+            <div class="cd hidden"></div>
             <div class="center">当前服务器状态</div>
             <div class="center">CPU温度：<span id="cputemp"></span>度&nbsp;硬盘温度<span id="hddtemp"></span>度</div>
             <div class="musicbox">
                 <div class="button">
-                    <a id="playsel" class="btn center">播放选中</a>
-                    <a id="playall" class="btn center">播放目录</a>
-                    <a id="playalls" class="btn center">随机播放</a>
-                    <a id="stop" class="btn center">停止</a>
+                    <a id="playsel" class="btn">播放选中</a>
+                    <a id="playall" class="btn">播放目录</a>
+                    <a id="playalls" class="btn">随机播放</a>
+                    <a id="stop" class="btn">停止</a>
                 </div>
                 <div id="dir">/</div>
                 <div class="filelist">
@@ -27,17 +28,24 @@
         <script type="text/javascript">
             function listfile(data) {
                 for (var a in data) {
-                    $('.filelist').append("<div><input type='checkbox' /><span>" + data[a] + "</span><a class='file'>播放</a></div>");
+                    $('.filelist').append("<div><input type='checkbox' /><span>" + data[a] + "</span><a class='file btn'>播放</a></div>");
                 }
                 $('.filelist a.file').click(function () {
+                    playing();
                     var mp3 = $(this).parent().children('span').text();
                     $('.filelist a.file').removeClass('playing');
                     $(this).addClass('playing');
                     var dir = $('#dir').text();
                     $.getJSON('music.php', {act: 'play', mp3: mp3, dir: dir}, function (data) {
-
+                        stoped();
                     });
                 });
+            }
+            function playing() {
+                $('.cd').removeClass('hidden');
+            }
+            function stoped() {
+                $('.cd').addClass('hidden');
             }
             (function () {
                 $.get('temp.php', function (data) {
@@ -60,22 +68,25 @@
                 });
                 $('#stop').click(function () {
                     $.getJSON('music.php', {act: 'stop'}, function (data) {
-
+                        stoped();
                     });
                 });
                 $('#playall').click(function () {
+                    playing();
                     var dir = $('#dir').text();
                     $.getJSON('music.php', {act: 'palyall', dir: dir}, function (data) {
-
+                        stoped();
                     });
                 });
                 $('#playalls').click(function () {
+                    playing();
                     var dir = $('#dir').text();
                     $.getJSON('music.php', {act: 'palyalls', dir: dir}, function (data) {
-
+                        stoped();
                     });
                 });
                 $('#playsel').click(function () {
+                    playing();
                     var dir = $('#dir').text();
                     var mp3 = [];
                     $('.filelist div input').each(function (index) {
@@ -88,7 +99,8 @@
                         if (data.status == 0) {
                             alert(data.info);
                         }
-                    },'json');
+                        stoped();
+                    }, 'json');
                 });
                 $('#dir').click(function () {
                     window.location.reload();
