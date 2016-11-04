@@ -87,6 +87,17 @@ switch ($_REQUEST['act']) {
             echo json_encode(array('status' => 1, 'yl' => $ok));
         }
         break;
+    //取播放状态
+    case 'playing':
+        $sh = "pgrep mplayer 2>/dev/null";
+//            echo $sh;
+        $ok = exec($sh);
+        if ($ok) {
+            echo json_encode(array('status' => 1));
+        } else {
+            echo json_encode(array('status' => 0, 'info' => '没在播放'));
+        }
+        break;
     //取目录
     default:
         if ($_GET['dir']) {

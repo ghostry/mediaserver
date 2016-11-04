@@ -51,10 +51,23 @@
             (function () {
                 $.getJSON('temp.php', function (data) {
                     $('#cputemp').html(data.cputemp);
+                    if(data.cputemp>70){
+                        $('#cputemp').addClass('red');
+                    }
                     $('#hddtemp').html(data.hddtemp);
+                    if(data.hddtemp>70){
+                        $('#hddtemp').addClass('red');
+                    }
                 });
                 $.getJSON('music.php', {act: 'amixer'}, function (data) {
                     $('#yl').val(data.yl);
+                });
+                $.getJSON('music.php', {act: 'playing'}, function (data) {
+                    if (data.status == 0) {
+                        stoped();
+                    } else {
+                        playing();
+                    }
                 });
                 $.getJSON('music.php', function (data) {
                     for (var a in data.dir) {
